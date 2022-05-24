@@ -12,6 +12,7 @@ Basic meme maker written in C++ for GTK
 The goal is to create very simple GTK demo app, that integrates all the skills learned at Programming course.
 
 ## Building from source
+Requirements: `opencv`, `gtk` linked into `g++`
 ```bash
 cmake .                                # Compiles
 ./cmake-build-debug/meme_maker         # Runs 

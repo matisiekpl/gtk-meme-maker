@@ -11,3 +11,5 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(meme_maker main.cpp MainWindow.cpp MainWindow.h)
 target_link_libraries(meme_maker PRIVATE PkgConfig::GTK ${OpenCV_LIBS})
+
+target_compile_options(meme_maker PRIVATE -Wall -Wextra -Wpedantic -Werror)

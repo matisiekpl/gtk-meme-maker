@@ -1,5 +1,5 @@
 //
-// Created by matisiekpl on 23.05.22.
+// Created by Mateusz Woźniak for Programming 2 course (ISI AGH)
 //
 
 #include "MainWindow.h"

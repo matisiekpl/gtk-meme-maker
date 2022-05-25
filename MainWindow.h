@@ -1,5 +1,5 @@
 //
-// Created by matisiekpl on 23.05.22.
+// Created by Mateusz Woźniak for Programming 2 course (ISI AGH)
 //
 
 #ifndef MEME_MAKER_MAINWINDOW_H
@@ -35,6 +35,7 @@ private:
     void save_meme(std::string filename);
 
     static void choose_file(GtkWidget *widget, gpointer window) {
+        (void) widget; // Eliminates "error: unused parameter ‘widget’"
         auto dialog = gtk_file_chooser_dialog_new("Otwórz", GTK_WINDOW(window),
                                                   GTK_FILE_CHOOSER_ACTION_OPEN,
                                                   GTK_STOCK_CANCEL,
@@ -50,6 +51,7 @@ private:
     }
 
     static void open_save_image_dialog(GtkWidget *widget, gpointer window) {
+        (void) widget; // Eliminates "error: unused parameter ‘widget’"
         if (!MainWindow::instance().is_image_loaded) return;
         auto dialog = gtk_file_chooser_dialog_new("Zapisz", GTK_WINDOW(window),
                                                   GTK_FILE_CHOOSER_ACTION_SAVE,

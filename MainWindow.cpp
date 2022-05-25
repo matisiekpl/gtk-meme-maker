@@ -40,7 +40,6 @@ void MainWindow::create_widgets() {
 void MainWindow::load_image(std::string new_filename) {
     filename = new_filename;
     std::cout << "Loading file: " << filename << std::endl;
-    gtk_widget_destroy(choose_image_button);
 
     cv::Mat loaded_image = cv::imread(filename);
 
@@ -66,37 +65,43 @@ void MainWindow::save_meme(std::string filename) {
 }
 
 cv::Mat MainWindow::render_image() {
-    if (!MainWindow::instance().is_image_loaded) return {};
-    auto temp_image = image.clone();
+    try {
+        if (!MainWindow::instance().is_image_loaded) return {};
+        auto temp_image = image.clone();
 
-    int text_size = meme_size / 400;
+        int text_size = meme_size / 400;
 
-    std::string first_text = gtk_entry_get_text(GTK_ENTRY(first_text_entry));
-    double first_text_scale = (double) first_text.length() / 70.0;
-    cv::putText(temp_image, first_text, cv::Point((meme_size / 2) - meme_size * first_text_scale, text_size * 50),
-                cv::FONT_HERSHEY_TRIPLEX, text_size,
-                cv::Scalar(0, 0, 0), 2, false);
+        std::string first_text = gtk_entry_get_text(GTK_ENTRY(first_text_entry));
+        double first_text_scale = (double) first_text.length() / 70.0;
+        cv::putText(temp_image, first_text, cv::Point((meme_size / 2) - meme_size * first_text_scale, text_size * 50),
+                    cv::FONT_HERSHEY_TRIPLEX, text_size,
+                    cv::Scalar(0, 0, 0), 2, false);
 
-    std::string second_text = gtk_entry_get_text(GTK_ENTRY(second_text_entry));
-    double second_text_scale = (double) second_text.length() / 70.0;
-    cv::putText(temp_image, second_text,
-                cv::Point((meme_size / 2) - meme_size * second_text_scale, meme_size - text_size * 50),
-                cv::FONT_HERSHEY_TRIPLEX, text_size,
-                cv::Scalar(0, 0, 0), 2, false);
+        std::string second_text = gtk_entry_get_text(GTK_ENTRY(second_text_entry));
+        double second_text_scale = (double) second_text.length() / 70.0;
+        cv::putText(temp_image, second_text,
+                    cv::Point((meme_size / 2) - meme_size * second_text_scale, meme_size - text_size * 50),
+                    cv::FONT_HERSHEY_TRIPLEX, text_size,
+                    cv::Scalar(0, 0, 0), 2, false);
 
-    cv::Mat scaled_image;
-    cv::resize(temp_image, scaled_image, cv::Size(MEME_SIZE, MEME_SIZE), cv::INTER_AREA);
+        cv::Mat scaled_image;
+        cv::resize(temp_image, scaled_image, cv::Size(MEME_SIZE, MEME_SIZE), cv::INTER_AREA);
 
-    auto pixbuf = gdk_pixbuf_new_from_data(scaled_image.data, GDK_COLORSPACE_RGB, FALSE, 8, scaled_image.cols,
-                                           scaled_image.rows,
-                                           scaled_image.step,
-                                           NULL, NULL);
-    meme_preview = gtk_image_new_from_pixbuf(pixbuf);
-    gtk_widget_set_size_request(meme_preview, 380, 380);
-    gtk_fixed_put(GTK_FIXED(container), meme_preview, 10, 54);
+        auto pixbuf = gdk_pixbuf_new_from_data(scaled_image.data, GDK_COLORSPACE_RGB, FALSE, 8, scaled_image.cols,
+                                               scaled_image.rows,
+                                               scaled_image.step,
+                                               NULL, NULL);
+        meme_preview = gtk_image_new_from_pixbuf(pixbuf);
+        gtk_widget_set_size_request(meme_preview, 380, 380);
+        gtk_widget_destroy(choose_image_button);
+        gtk_fixed_put(GTK_FIXED(container), meme_preview, 10, 54);
 
-    gtk_widget_show_all(window);
-    return temp_image;
+        gtk_widget_show_all(window);
+        return temp_image;
+    } catch (...) {
+        gtk_button_set_label(GTK_BUTTON(choose_image_button), "Nieprawidłowy plik, kliknij by spróbować jeszcze raz");
+    }
+    return {};
 }
 
 void MainWindow::run() {
